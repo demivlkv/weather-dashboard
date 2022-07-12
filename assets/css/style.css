@@ -1,0 +1,30 @@
+:root {
+    --mint: #a1fcdf;
+    --pink: #d5aca9;
+}
+    
+* {
+    box-sizing: border-box;
+}
+    
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 0.9em;
+}
+    
+h1 {
+    background-color: rgb(87, 126, 253);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 36px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.current-city {
+    border: 1px solid #000;
+    background-color: #eeeeee;
+    padding: 15px;
+}
