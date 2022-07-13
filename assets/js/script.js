@@ -1,68 +1,56 @@
 const currentDay = moment().format('L');
 
 let cityInputEl = document.getElementById('search-city');
-let searchButtonEl = document.getElementById('search-btn');
 
 // access weather api
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
 
-// display current date
-$('#current-day').text('(' + currentDay + ')');
-
-// display search history
-
-// search for weather in specified city
-/*function fetchWeather() {
-  var apiUrl = 'https://api.openweathermap.org/data/2.5/onecall?q=' + searchCity.value + '&units=imperial&appid=' + apiKey;
-
-  fetch(apiUrl)
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data) {
-        console.log(data);
-      })
-};*/
+const weather = {};
 
 // create onclick addEventListener for search button
 $('#search-btn').on('click', function(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    // get value from input element
-    let searchCity = cityInputEl.value.trim();
+  // display current date
+  //$('#current-day').text();
 
-    let xyApi = 'http://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
+  getWeather();
+});
 
-    fetch(xyApi)
+function getWeather() {
+  // get value from input element
+  let searchCity = cityInputEl.value.trim();
+
+  // convert city to latitude & longitude
+  let xyApi = 'http://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
+
+  fetch(xyApi)
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data) {
+    console.log(data);
+    let lat = data[0].lat;
+    let lon = data[0].lon;
+    let city = data[0].name;
+
+    $('#current-city').text(city);
+
+    let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&units=imperial&appid=' + apiKey;
+
+    fetch(weatherApi)
     .then(function(response) {
       return response.json();
     })
     .then(function(data) {
-        console.log(data);
-        let lat = data[0].lat;
-        let lon = data[0].lon;
+      console.log(data);
 
-        let cityApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&units=imperial&appid=' + apiKey;
+      $('#current-city').append(' (' + currentDay + ') <img src="http://openweathermap.org/img/wn/' + data.current.weather[0].icon + '.png" alt="' + data.current.weather[0].description + '"/>');
+      $('#current-temp').text(data.current.temp + '° F');
+      $('#current-wind').text(data.current.wind_speed);
+      $('#current-humidity').text(data.current.humidity);
+      $('#uv-index').text(data.current.uvi);
 
-        fetch(cityApi)
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(data) {
-            console.log(data);
-          })
-      })
-
-    //if (searchCity) {
-    //    getCityInfo(searchCity);
-    //    cityInputEl.value = "";
-    //} else {
-    //    alert('Please enter a valid city name');
-    //}
-
-    console.log(searchCity);
-});
-
-// display current city weather
-
-// display 5-day forecast
+    })
+  })
+};
