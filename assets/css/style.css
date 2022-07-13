@@ -34,3 +34,12 @@ input {
 #search-btn {
     margin: 10px 0;
 }
+
+#current-day {
+    color: #999999;
+    font-size: 24px;
+}
+
+.forecast {
+    background-color: #eeeeee;
+}
