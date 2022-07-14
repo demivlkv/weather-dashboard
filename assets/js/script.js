@@ -11,9 +11,6 @@ const weather = {};
 $('#search-btn').on('click', function(event) {
   event.preventDefault();
 
-  // display current date
-  //$('#current-day').text();
-
   getWeather();
 });
 
@@ -46,10 +43,18 @@ function getWeather() {
       console.log(data);
 
       $('#current-city').append(' (' + currentDay + ') <img src="http://openweathermap.org/img/wn/' + data.current.weather[0].icon + '.png" alt="' + data.current.weather[0].description + '"/>');
-      $('#current-temp').text(data.current.temp + '° F');
-      $('#current-wind').text(data.current.wind_speed);
-      $('#current-humidity').text(data.current.humidity);
-      $('#uv-index').text(data.current.uvi);
+      $('#current-temp').text('Temp: ' + Math.round(data.current.temp) + '° F');
+      $('#current-wind').text('Wind: ' + Math.round(data.current.wind_speed) + ' MPH');
+      $('#current-humidity').text('Humidity: ' + data.current.humidity + '%');
+      $('#uv-index').append('UV Index: <div class="badge" style="font-size: 0.8rem;">' + data.current.uvi + '</div>');
+
+      if (data.current.uvi > 8.0) {
+        $('.badge').removeClass().addClass('badge badge-danger');
+      } else if (data.current.uvi < 8.0 && data.current.uvi > 3.0) {
+        $('.badge').removeClass().addClass('badge badge-warning');
+      } else if (data.current.uvi < 3.0){
+        $('.badge').removeClass().addClass('badge badge-success');
+      }
 
     })
   })
