@@ -10,7 +10,7 @@ $('#search-btn').on('click', function(event) {
   event.preventDefault();
 
   getWeather();
-  getForecast();
+  //getForecast();
 });
 
 // display weather info for searched city
@@ -31,7 +31,7 @@ function getWeather() {
       const city = data[0].name;
 
   // search current weather for city
-  let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&units=imperial&appid=' + apiKey;
+  let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly&units=imperial&appid=' + apiKey;
 
     fetch(weatherApi)
     .then(function(response) {
@@ -56,10 +56,60 @@ function getWeather() {
     } else if (data.current.uvi < 3.0){
       $('.badge').removeClass().addClass('badge badge-success');
     }
+
+    // create 5 cards to display forecast
+    for (let i = 1; i < 6; i++) {    
+      let forecastDate = moment((data.daily[i].dt) * 1000).format('L');
+      let forecastIcon = data.daily[i].weather[0].icon;
+      let forecastDesc = data.daily[i].weather[0].description;
+      let forecastTemp = Math.round(data.daily[i].temp.day);
+      let forecastWind = Math.round(data.daily[i].wind_speed);
+      let forecastHumidity = data.daily[i].humidity;
+
+      console.log(forecastDate);
+
+      // set div col
+      const forecastCol = document.createElement('div');
+      $(forecastCol).attr('class', 'col');
+      $('#display-forecast').append(forecastCol);
+
+      // set card
+      const forecastCard = document.createElement('div');
+      $(forecastCard).attr('class', 'forecast');
+      $(forecastCol).append(forecastCard);
+      const forecastCardBody = document.createElement('div');
+      $(forecastCardBody).attr('class', 'card-body');
+      $(forecastCard).append(forecastCardBody);
+
+      // set forecast date
+      const forecastCardH5 = document.createElement('h5');
+      $(forecastCardH5).attr('class', 'card-title');
+      $(forecastCardH5).text(forecastDate);
+      $(forecastCardBody).append(forecastCardH5);
+
+      // set forecast icon
+      $(forecastCardBody).append('<img src="http://openweathermap.org/img/wn/' + forecastIcon + 
+      '.png" alt="' + forecastDesc + '"/>');
+
+      // set forecast temp
+      const forecastCardTemp = document.createElement('p');
+      $(forecastCardTemp).text('Temp: ' + forecastTemp + '° F');
+      $(forecastCardBody).append(forecastCardTemp);
+
+      // set forecast wind
+      const forecastCardWind = document.createElement('p');
+      $(forecastCardWind).text('Wind: ' + forecastWind + ' MPH');
+      $(forecastCardBody).append(forecastCardWind);
+
+      // set forecast humidity
+      const forecastCardHumidity = document.createElement('p');
+      $(forecastCardHumidity).text('Humidity: ' + forecastHumidity + '%');
+      $(forecastCardBody).append(forecastCardHumidity);
+    }
     })
   })
 };
-
+/*
 // get 5-day forecast
 function getForecast() {
   let searchCity = cityInputEl.value.trim();
@@ -81,12 +131,14 @@ function getForecast() {
         let forecastWind = Math.round(forecast.list[i].wind.speed);
         let forecastHumidity = forecast.list[i].main.humidity;
 
-        // create div col
+        console.log(forecastDate);
+
+        // set div col
         const forecastCol = document.createElement('div');
         $(forecastCol).attr('class', 'col');
         $('#display-forecast').append(forecastCol);
 
-        // create card
+        // set card
         const forecastCard = document.createElement('div');
         $(forecastCard).attr('class', 'forecast');
         $(forecastCol).append(forecastCard);
@@ -94,36 +146,30 @@ function getForecast() {
         $(forecastCardBody).attr('class', 'card-body');
         $(forecastCard).append(forecastCardBody);
 
-        // create forecast date
+        // set forecast date
         const forecastCardH5 = document.createElement('h5');
         $(forecastCardH5).attr('class', 'card-title');
         $(forecastCardH5).text(forecastDate);
         $(forecastCardBody).append(forecastCardH5);
 
-        // create forecast icon
+        // set forecast icon
         $(forecastCardBody).append('<img src="http://openweathermap.org/img/wn/' + forecastIcon + 
         '.png" alt="' + forecastDesc + '"/>');
 
-        // create forecast temp
+        // set forecast temp
         const forecastCardTemp = document.createElement('p');
-        $(forecastCardTemp).text('Temp: ' + forecastTemp + ' ° F');
+        $(forecastCardTemp).text('Temp: ' + forecastTemp + '° F');
         $(forecastCardBody).append(forecastCardTemp);
 
-        // create forecast wind
+        // set forecast wind
         const forecastCardWind = document.createElement('p');
         $(forecastCardWind).text('Wind: ' + forecastWind + ' MPH');
         $(forecastCardBody).append(forecastCardWind);
 
-        // create forecast humidity
-        // create forecast temp
+        // set forecast humidity
         const forecastCardHumidity = document.createElement('p');
         $(forecastCardHumidity).text('Humidity: ' + forecastHumidity + '%');
         $(forecastCardBody).append(forecastCardHumidity);
-
-        console.log(forecastDate);
-        console.log(forecastTemp);
-        console.log(forecastWind);
-        console.log(forecastHumidity);
       }
     })
-  }
+};*/
