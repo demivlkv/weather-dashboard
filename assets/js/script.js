@@ -8,7 +8,24 @@ $('#search-btn').on('click', function(event) {
   event.preventDefault();
 
   getWeather();
+  searchHistory();
 });
+
+function searchHistory() {
+  let cityList = [];
+  let searchCity = cityInputEl.value.trim();
+  cityList.push(searchCity);
+
+  $.each(cityList, function(index, value) {
+    const liEl = document.createElement('li');
+    liEl.innerHTML = value;
+    $(liEl).attr('class', 'list-group-item list-group-item-action');
+    $('#search-history').append(liEl);
+  })
+
+  // save to local storage
+  //localStorage.setItem('cities', JSON.stringify(cities));
+};
 
 // display weather info for searched city
 function getWeather() {
@@ -34,41 +51,41 @@ function getWeather() {
     .then(function(response) {
       return response.json();
     })
-    .then(function(data) {
-      console.log(data);
+    .then(function(weather) {
+      console.log(weather);
 
-      let currentDay = moment(data.current.dt * 1000 + (data.timezone_offset * 1000)).format('L');
+      let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('L');
       console.log(currentDay);
 
       // display current weather information on top of page
       $('#current-city').text(city);
-      $('#current-city').append(' (' + currentDay + ') <img src="http://openweathermap.org/img/wn/' + data.current.weather[0].icon + '.png" alt="' + data.current.weather[0].description + '"/>');
-      $('#current-temp').text('Temp: ' + Math.round(data.current.temp) + '° F');
-      $('#current-wind').text('Wind: ' + Math.round(data.current.wind_speed) + ' MPH');
-      $('#current-humidity').text('Humidity: ' + data.current.humidity + '%');
-      $('#uv-index').append('UV Index: <span class="bg-uvi">' + data.current.uvi + '</span>');
+      $('#current-city').append(' (' + currentDay + ') <img src="http://openweathermap.org/img/wn/' + weather.current.weather[0].icon + '.png" alt="' + weather.current.weather[0].description + '"/>');
+      $('#current-temp').text('Temp: ' + Math.round(weather.current.temp) + '° F');
+      $('#current-wind').text('Wind: ' + Math.round(weather.current.wind_speed) + ' MPH');
+      $('#current-humidity').text('Humidity: ' + weather.current.humidity + '%');
+      $('#uv-index').append('UV Index: <span class="bg-uvi">' + weather.current.uvi + '</span>');
 
       // display colors according to uv index
-      if (data.current.uvi > 11.0) {
+      if (weather.current.uvi > 11.0) {
         $('.bg-uvi').addClass('badge-extreme');
-      } else if (data.current.uvi < 11.0 && data.current.uvi > 8.0) {
+      } else if (weather.current.uvi < 11.0 && weather.current.uvi > 8.0) {
         $('.bg-uvi').addClass('badge-veryhigh');
-      } else if (data.current.uvi < 8.0 && data.current.uvi > 5.0) {
+      } else if (weather.current.uvi < 8.0 && weather.current.uvi > 5.0) {
         $('.bg-uvi').addClass('badge-high');
-      } else if (data.current.uvi < 5.0 && data.current.uvi > 2.0) {
+      } else if (weather.current.uvi < 5.0 && weather.current.uvi > 2.0) {
         $('.bg-uvi').addClass('badge-moderate');
-      } else if (data.current.uvi < 2.0){
+      } else if (weather.current.uvi < 2.0){
         $('.bg-uvi').addClass('badge-good');
       }
 
       // create 5 cards to display forecast
       for (let i = 1; i < 6; i++) {    
-        let forecastDate = moment((data.daily[i].dt) * 1000).format('ddd L');
-        let forecastIcon = data.daily[i].weather[0].icon;
-        let forecastDesc = data.daily[i].weather[0].description;
-        let forecastTemp = Math.round(data.daily[i].temp.day);
-        let forecastWind = Math.round(data.daily[i].wind_speed);
-        let forecastHumidity = data.daily[i].humidity;
+        let forecastDate = moment((weather.daily[i].dt) * 1000).format('ddd M/D');
+        let forecastIcon = weather.daily[i].weather[0].icon;
+        let forecastDesc = weather.daily[i].weather[0].description;
+        let forecastTemp = Math.round(weather.daily[i].temp.day);
+        let forecastWind = Math.round(weather.daily[i].wind_speed);
+        let forecastHumidity = weather.daily[i].humidity;
 
         // set div col
         const forecastCol = document.createElement('div');
