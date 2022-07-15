@@ -37,7 +37,8 @@ function getWeather() {
     .then(function(data) {
       console.log(data);
 
-      let currentDay = moment((data.current.dt) * 1000).format('L');
+      let currentDay = moment(data.current.dt * 1000 + (data.timezone_offset * 1000)).format('L');
+      console.log(currentDay);
 
       // display current weather information on top of page
       $('#current-city').text(city);
