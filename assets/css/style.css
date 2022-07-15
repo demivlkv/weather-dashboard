@@ -26,6 +26,10 @@ h3 {
     margin: 20px 0;
 }
 
+h5 {
+    text-align: center;
+}
+
 input {
     margin: 10px 0;
 }
@@ -40,12 +44,38 @@ input {
     font-size: 24px;
 }
 
-.badge {
-    padding: 3px;
-} 
+.bg-uvi {
+    display: inline-block;
+    padding: 3px 10px;
+    width: 75px;
+    margin-left: 10px;
+    border-radius: 2px;
+    text-align: center;
+}
+
+.badge-extreme {
+    background-color: #a18efc;
+    color: #fff;
+}
+
+.badge-veryhigh {
+    background-color: #ba2323;
+    color: #fff;
+}
 
 .badge-high {
     background-color: #fa7a2a;
+    color: #000;
+}
+
+.badge-moderate {
+    background-color: #faf32a;
+    color: #000;
+}
+
+.badge-good {
+    background-color: #008a10;
+    color: #fff;
 }
 
 .forecast {
