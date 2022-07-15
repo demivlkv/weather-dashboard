@@ -3,35 +3,71 @@ let cityInputEl = document.getElementById('search-city');
 // access weather api
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
 
+loadHistory();
+
+function loadHistory() {
+  cities = localStorage.getItem('cities');
+
+  if (cities == null) {
+    cities = [];
+  } else {
+    cities = JSON.parse(cities);
+
+    // create list item for each city input
+    for (i = 0; i < cities.length; i++) {
+      const btnEl = document.createElement('button');
+      btnEl.innerHTML = cities[i];
+      $(btnEl).attr('class', 'list-group-item list-group-item-action');
+      $('#search-history').append(btnEl);
+    }
+  }
+};
+
 // create onclick addEventListener for search button
 $('#search-btn').on('click', function(event) {
   event.preventDefault();
-
-  getWeather();
-  searchHistory();
-});
-
-function searchHistory() {
-  let cityList = [];
   let searchCity = cityInputEl.value.trim();
-  cityList.push(searchCity);
 
-  $.each(cityList, function(index, value) {
-    const liEl = document.createElement('li');
-    liEl.innerHTML = value;
-    $(liEl).attr('class', 'list-group-item list-group-item-action');
-    $('#search-history').append(liEl);
-  })
+  // clear city input upon search
+  $('#search-city').empty();
+
+  if (searchCity === "") {
+    return;
+  }
+
+  // search localstorage
+  cities = localStorage.getItem('cities');
+
+  if (cities === null) {
+    cities = [];
+  } else {
+    cities = JSON.parse(cities);
+  }
+
+  // create list item for each city input
+  if (!cities) {
+  for (i = 0; i < cities.length; i++) {
+      const btnEl = document.createElement('button');
+      btnEl.innerHTML = cities[i];
+      $(btnEl).attr('class', 'list-group-item list-group-item-action');
+      $('#search-history').append(btnEl);
+      cities.push(searchCity);
+    }
+  } else {
+    cities.push(searchCity);
+  }
 
   // save to local storage
-  //localStorage.setItem('cities', JSON.stringify(cities));
-};
+  localStorage.setItem('cities', JSON.stringify(cities));
+  
+  getWeather();
+  });
 
 // display weather info for searched city
 function getWeather() {
   let searchCity = cityInputEl.value.trim();
 
-  // convert city to latitude & longitude
+  // find latitude & longitude values from city name
   let xyApi = 'http://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
   
     fetch(xyApi)
@@ -44,7 +80,7 @@ function getWeather() {
       const lon = data[0].lon;
       const city = data[0].name;
 
-  // search weather for specified city
+  // search weather for specified city with found lat & lon
   let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly&units=imperial&appid=' + apiKey;
 
     fetch(weatherApi)
@@ -54,10 +90,10 @@ function getWeather() {
     .then(function(weather) {
       console.log(weather);
 
+      // get current date of searched city according to timezone
       let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('L');
-      console.log(currentDay);
 
-      // display current weather information on top of page
+      // display current weather information of city
       $('#current-city').text(city);
       $('#current-city').append(' (' + currentDay + ') <img src="http://openweathermap.org/img/wn/' + weather.current.weather[0].icon + '.png" alt="' + weather.current.weather[0].description + '"/>');
       $('#current-temp').text('Temp: ' + Math.round(weather.current.temp) + '° F');
@@ -100,7 +136,7 @@ function getWeather() {
         $(forecastCardBody).attr('class', 'card-body');
         $(forecastCard).append(forecastCardBody);
 
-        // set forecast date
+        // set forecast dates
         const forecastCardH5 = document.createElement('h5');
         $(forecastCardH5).attr('class', 'card-title');
         $(forecastCardH5).text(forecastDate);
