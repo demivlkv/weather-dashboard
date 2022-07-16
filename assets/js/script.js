@@ -4,13 +4,16 @@ let cities = [];
 // access weather api
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
 
+// check localstorage for last viewed city, then load it
 if (localStorage.getItem('cities') !== null) {
   // clear input field
   $('#search-city').empty();
 
   lastViewed();
   getWeather();
-}
+};
+
+loadCities();
 
 function loadCities() {
   // search localstorage
@@ -27,6 +30,7 @@ function loadCities() {
   } 
 };
 
+// load last viewed city before page refresh
 function lastViewed() {
   let cities = JSON.parse(localStorage.getItem('cities'));
   let city = cities.slice(-1).pop();
@@ -57,6 +61,9 @@ $('#search-btn').on('click', function(event) {
 
   // save to local storage
   localStorage.setItem('cities', JSON.stringify(cities));
+
+  // refresh page to load city search history
+  window.location.reload();
 });
 
 // display weather info for searched city
@@ -160,3 +167,9 @@ function getWeather() {
     })
   })
 };
+
+// clear history on click
+$('#clear-btn').on('click', function() {
+  localStorage.clear(cities);
+  window.location.reload();
+});
