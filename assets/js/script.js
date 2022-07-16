@@ -1,67 +1,63 @@
 let cityInputEl = document.getElementById('search-city');
+let cities = [];
 
 // access weather api
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
 
-loadHistory();
+if (localStorage.getItem('cities') !== null) {
+  // clear input field
+  $('#search-city').empty();
 
-function loadHistory() {
-  cities = localStorage.getItem('cities');
+  lastViewed();
+  getWeather();
+}
 
-  if (cities == null) {
-    cities = [];
-  } else {
-    cities = JSON.parse(cities);
+function loadCities() {
+  // search localstorage
+  cities = JSON.parse(localStorage.getItem('cities'));
 
-    // create list item for each city input
+  // create list item for each city input
+  if (cities) {
     for (i = 0; i < cities.length; i++) {
       const btnEl = document.createElement('button');
       btnEl.innerHTML = cities[i];
       $(btnEl).attr('class', 'list-group-item list-group-item-action');
       $('#search-history').append(btnEl);
     }
-  }
+  } 
 };
 
-// create onclick addEventListener for search button
+function lastViewed() {
+  let cities = JSON.parse(localStorage.getItem('cities'));
+  let city = cities.slice(-1).pop();
+  $('#search-city').val(city);
+}
+
+// onclick event listener for search button
 $('#search-btn').on('click', function(event) {
   event.preventDefault();
   let searchCity = cityInputEl.value.trim();
 
-  // clear city input upon search
+  // clear input field
   $('#search-city').empty();
 
+  // if input field left blank
   if (searchCity === "") {
     return;
+  } else {
+    getWeather();
   }
 
-  // search localstorage
-  cities = localStorage.getItem('cities');
-
+  // check for existing city
   if (cities === null) {
     cities = [];
-  } else {
-    cities = JSON.parse(cities);
   }
 
-  // create list item for each city input
-  if (!cities) {
-  for (i = 0; i < cities.length; i++) {
-      const btnEl = document.createElement('button');
-      btnEl.innerHTML = cities[i];
-      $(btnEl).attr('class', 'list-group-item list-group-item-action');
-      $('#search-history').append(btnEl);
-      cities.push(searchCity);
-    }
-  } else {
-    cities.push(searchCity);
-  }
+  cities.push(searchCity);
 
   // save to local storage
   localStorage.setItem('cities', JSON.stringify(cities));
-  
-  getWeather();
-  });
+});
 
 // display weather info for searched city
 function getWeather() {
