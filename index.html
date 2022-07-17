@@ -33,14 +33,14 @@
                 <div class="form-group input-group">
                     <input type="text" id="search-city" class="form-control" placeholder="Enter city">
                     <div class="input-group-append">
-                      <button id="search-btn" class="btn btn-primary mb-2" type="submit" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i></button>
+                      <button id="search-btn" class="btn btn-dark mb-2" type="submit" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </div>
             </form>
 
             <!-- search history here -->
 
-            <div class="card border-0">
+            <div id="recent-search" class="card border-0">
 
                 <ul id="search-history" class="list-group"></ul>
                 <button type="button" id="clear-btn" class="btn btn-secondary btn-block">Clear History</button>
@@ -52,19 +52,17 @@
 
         <div class="col-12 col-md-9">
             <div id="current-weather">
-                <div class="row">
-                    <div class="col-12 text-center">
+                <div class="row align-items-center">
+                    <div class="col-md">
 
-                        <h2 id="current-city"></h2>
+                        <div id="current-icon"></div>
 
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm text-center">
+                    <div class="col-md">
 
-                        <p id="current-temp"></p>
-                        
-                    </div>        
+                        <div id="current-city"></div>
+
+                        <div class="row">
                     <div class="col-sm text-center">
                         
                         <p id="current-wind"></p>
@@ -80,7 +78,9 @@
                             <p id="uv-index"></p>
                      
                     </div>
+                        </div>
                 </div>
+            </div>
             </div>
             
             <div class="row">

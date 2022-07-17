@@ -81,9 +81,8 @@ function getWeather() {
       let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('dddd, L');
 
       // display current weather information of city
-      $('#current-city').append('<img src="./assets/images/icons/' + weather.current.weather[0].icon + '.png" alt="' + weather.current.weather[0].description + '"/><br /><i class="fa-solid fa-location-dot"></i> ' + city + ', ' + country);
-      $('#current-city').append('<p class="current-date">' + currentDay + '</p>');
-      $('#current-temp').append('<strong>Tempurature:</strong><br />' + Math.round(weather.current.temp) + '° F');
+      $('#current-icon').append('<img src="./assets/images/icons/' + weather.current.weather[0].icon + '.svg" alt="' + weather.current.weather[0].description + '"/>');
+      $('#current-city').append('<p class="current-temp">' + Math.round(weather.current.temp) + '° F</p><h2><i class="fa-solid fa-location-dot"></i> ' + city + ', ' + country + '</h2><p class="current-date">' + currentDay + '</p>');
       $('#current-wind').append('<strong>Wind:</strong><br />' + Math.round(weather.current.wind_speed) + ' MPH');
       $('#current-humidity').append('<strong>Humidity:</strong><br />' + weather.current.humidity + '%');
       $('#uv-index').append('<strong>UV Index:</strong><br /><span class="bg-uvi">' + weather.current.uvi + '</span>');
@@ -131,7 +130,7 @@ function getWeather() {
 
         // set forecast icon
         $(forecastCardBody).append('<img src="./assets/images/icons/' + forecastIcon + 
-        '.png" alt="' + forecastDesc + '"/>');
+        '.svg" alt="' + forecastDesc + '"/>');
 
         // set forecast temp
         const forecastCardTemp = document.createElement('p');
