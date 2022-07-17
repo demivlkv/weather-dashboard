@@ -36,6 +36,12 @@ h5 {
     font-weight: bold;
 }
 
+.hide {
+    display: none;
+}
+
+/* sidebar section */
+
 input {
     margin: 10px 0;
 }
@@ -50,26 +56,35 @@ input {
     margin: 10px 0;
 }
 
+/* current weather section */
+
 #current-weather {
     background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+#current-city {
+    padding-left: 20px;
+}
+
+#current-city img {
+    display: block;
+    margin: 0px auto;
+    width: 250px;
 }
 
 .current-date {
     color: #999999;
     font-size: 20px;
-    line-height: 1.5em;
+    line-height: 1.5;
 }
 
 .current-temp {
     font-size: 48px;
     font-weight: bold;
-    line-height: 1.5em;
-}
-
-#current-city {
-    padding-left: 20px;
+    line-height: 1.5;
 }
 
 .bg-uvi {
@@ -105,16 +120,23 @@ input {
     color: #fff;
 }
 
-.forecast {
-    background: linear-gradient(#d4dbe7, #f2ece0);
-    color: #444;
-    font-size: 14px;
+/* forecast section */
+
+#display-forecast {
+    margin-bottom: 15px;
 }
 
-#current-city img {
-    display: block;
-    margin: 0px auto;
-    width: 275px;
+.forecast {
+    background: linear-gradient(#a6abb5, #f2ece0);
+    color: #444;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.forecast-temp {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .forecast img {

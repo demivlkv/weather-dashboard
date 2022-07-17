@@ -1,5 +1,4 @@
 let cityInputEl = document.getElementById('search-city');
-let cities = {};
 
 // access weather api
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
@@ -7,7 +6,7 @@ const apiKey = 'e3de8be511a273af8a582c5c16284223';
 // check localstorage for last viewed city, then load it
 if (localStorage.getItem('cities') !== null) {
   // clear input field
-  $('#search-city').empty();
+  cityInputEl.value = '';
 
   lastViewed();
   getWeather();
@@ -18,7 +17,7 @@ loadCities();
 // load sidebar with previous searches
 function loadCities() {
   // search localstorage
-  cities = JSON.parse(localStorage.getItem('cities'));
+  cities = JSON.parse(localStorage.getItem('cities')) || [];
 
   // create list item for each city input in reverse order
   if (cities) {
@@ -33,7 +32,7 @@ function loadCities() {
       $('#search-history').append(btnEl);
 
       // make button clickable
-      $(btnEl).on('click', function() {
+      $(btnEl).on('click', function(event) {
         let getCity = $(this).attr('data-city');
         getWeather(getCity);
         window.location.reload();
@@ -47,6 +46,10 @@ function lastViewed() {
   let cities = JSON.parse(localStorage.getItem('cities'));
   let city = cities.slice(-1).pop();
   $('#search-city').val(city);
+
+  // display hidden items
+  $('.current-weather').removeClass('hide');
+  $('.forecast-h3').removeClass('hide');
 }
 
 // display weather info for searched city
@@ -78,11 +81,11 @@ function getWeather() {
       console.log(weather);
 
       // get current date of searched city according to timezone
-      let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('dddd, L');
+      let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('dddd, l');
 
       // display current weather information of city
       $('#current-icon').append('<img src="./assets/images/icons/' + weather.current.weather[0].icon + '.svg" alt="' + weather.current.weather[0].description + '"/>');
-      $('#current-city').append('<p class="current-temp">' + Math.round(weather.current.temp) + '° F</p><h2><i class="fa-solid fa-location-dot"></i> ' + city + ', ' + country + '</h2><p class="current-date">' + currentDay + '</p>');
+      $('#current-city').append('<p class="current-temp">' + Math.round(weather.current.temp) + '° F</p><p>' + weather.current.weather[0].description + '</p><h2><i class="fa-solid fa-location-dot"></i> ' + city + ', ' + country + '</h2><p class="current-date">' + currentDay + '</p>');
       $('#current-wind').append('<strong>Wind:</strong><br />' + Math.round(weather.current.wind_speed) + ' MPH');
       $('#current-humidity').append('<strong>Humidity:</strong><br />' + weather.current.humidity + '%');
       $('#uv-index').append('<strong>UV Index:</strong><br /><span class="bg-uvi">' + weather.current.uvi + '</span>');
@@ -100,6 +103,8 @@ function getWeather() {
         $('.bg-uvi').addClass('badge-good');
       }
 
+      saveCity();
+
       // create 5 cards to display forecast
       for (let i = 1; i < 6; i++) {    
         let forecastDate = moment((weather.daily[i].dt) * 1000).format('ddd M/D');
@@ -111,7 +116,7 @@ function getWeather() {
 
         // set div col
         const forecastCol = document.createElement('div');
-        $(forecastCol).attr('class', 'col');
+        $(forecastCol).attr('class', 'col-sm');
         $('#display-forecast').append(forecastCol);
 
         // set card
@@ -134,7 +139,8 @@ function getWeather() {
 
         // set forecast temp
         const forecastCardTemp = document.createElement('p');
-        $(forecastCardTemp).html('<strong>Temp:</strong> ' + forecastTemp + '° F');
+        $(forecastCardTemp).attr('class', 'forecast-temp');
+        $(forecastCardTemp).append(forecastTemp + '° F');
         $(forecastCardBody).append(forecastCardTemp);
 
         // set forecast wind
@@ -155,15 +161,12 @@ function getWeather() {
 $('#search-btn').on('click', function(event) {
   let searchCity = cityInputEl.value.trim();
 
-  // clear input field
-  //$('#search-city').empty();
-
   // do nothing if input field left blank, otherwise get weather
-  if (searchCity === "") {
-    return;
-  } else {
+  if (searchCity) {
     getWeather(searchCity);
-    searchCity.value = '';
+    cityInputEl.value = '';
+  } else {
+    return;
   }
 
   // check for city in array
@@ -173,13 +176,20 @@ $('#search-btn').on('click', function(event) {
 
   // add city into array
   cities.push(searchCity);
+  saveCity();
 
-  // save to local storage
-  localStorage.setItem('cities', JSON.stringify(cities));
+  // display hidden items
+  $('.current-weather').removeClass('hide');
+  $('.forecast-h3').removeClass('hide');
 });
 
 // clear history on click
-$('#clear-btn').on('click', function() {
+$('#clear-btn').on('click', function(event) {
   localStorage.clear(cities);
   window.location.reload();
 });
+
+// save to local storage
+function saveCity() {
+  localStorage.setItem('cities', JSON.stringify(cities));
+};

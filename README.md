@@ -7,8 +7,8 @@ Project description here
 - Bootstrap
 - JavaScript / jQuery
 - Moment.js
-- [OpenWeatherMap.org API] (https://openweathermap.org/)
-- Weather icons by [Ashley Jager] (https://github.com/manifestinteractive/weather-underground-icons)
+- [OpenWeather One Call API](https://openweathermap.org/)
+- Weather icons by [Bas Milius](https://github.com/basmilius/weather-icons)
 
 ## Project Screenshot
 ![This is a screenshot of the weather dashboard.](/../main/assets/images/screenshot.png)
