@@ -65,6 +65,7 @@ function getWeather() {
       const lat = data[0].lat;
       const lon = data[0].lon;
       const city = data[0].name;
+      const country = data[0].country;
 
   // search weather for specified city with found lat & lon
   let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly&units=imperial&appid=' + apiKey;
@@ -77,15 +78,15 @@ function getWeather() {
       console.log(weather);
 
       // get current date of searched city according to timezone
-      let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('L');
+      let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('dddd, L');
 
       // display current weather information of city
-      $('#current-city').text(city);
-      $('#current-city').append(' (' + currentDay + ') <img src="./assets/images/icons/' + weather.current.weather[0].icon + '.png" alt="' + weather.current.weather[0].description + '"/>');
-      $('#current-temp').text('Temp: ' + Math.round(weather.current.temp) + '° F');
-      $('#current-wind').text('Wind: ' + Math.round(weather.current.wind_speed) + ' MPH');
-      $('#current-humidity').text('Humidity: ' + weather.current.humidity + '%');
-      $('#uv-index').append('UV Index: <span class="bg-uvi">' + weather.current.uvi + '</span>');
+      $('#current-city').append('<img src="./assets/images/icons/' + weather.current.weather[0].icon + '.png" alt="' + weather.current.weather[0].description + '"/><br /><i class="fa-solid fa-location-dot"></i> ' + city + ', ' + country);
+      $('#current-city').append('<p class="current-date">' + currentDay + '</p>');
+      $('#current-temp').append('<strong>Tempurature:</strong><br />' + Math.round(weather.current.temp) + '° F');
+      $('#current-wind').append('<strong>Wind:</strong><br />' + Math.round(weather.current.wind_speed) + ' MPH');
+      $('#current-humidity').append('<strong>Humidity:</strong><br />' + weather.current.humidity + '%');
+      $('#uv-index').append('<strong>UV Index:</strong><br /><span class="bg-uvi">' + weather.current.uvi + '</span>');
 
       // display colors according to uv index
       if (weather.current.uvi > 11.0) {
@@ -134,17 +135,17 @@ function getWeather() {
 
         // set forecast temp
         const forecastCardTemp = document.createElement('p');
-        $(forecastCardTemp).text('Temp: ' + forecastTemp + '° F');
+        $(forecastCardTemp).html('<strong>Temp:</strong> ' + forecastTemp + '° F');
         $(forecastCardBody).append(forecastCardTemp);
 
         // set forecast wind
         const forecastCardWind = document.createElement('p');
-        $(forecastCardWind).text('Wind: ' + forecastWind + ' MPH');
+        $(forecastCardWind).html('<strong>Wind:</strong> ' + forecastWind + ' MPH');
         $(forecastCardBody).append(forecastCardWind);
 
         // set forecast humidity
         const forecastCardHumidity = document.createElement('p');
-        $(forecastCardHumidity).text('Humidity: ' + forecastHumidity + '%');
+        $(forecastCardHumidity).html('<strong>Humidity:</strong> ' + forecastHumidity + '%');
         $(forecastCardBody).append(forecastCardHumidity);
       }
     })
