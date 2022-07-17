@@ -1,5 +1,5 @@
 let cityInputEl = document.getElementById('search-city');
-let cities = [];
+let cities = {};
 
 // access weather api
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
@@ -15,19 +15,31 @@ if (localStorage.getItem('cities') !== null) {
 
 loadCities();
 
+// load sidebar with previous searches
 function loadCities() {
   // search localstorage
   cities = JSON.parse(localStorage.getItem('cities'));
 
-  // create list item for each city input
+  // create list item for each city input in reverse order
   if (cities) {
-    for (i = 0; i < cities.length; i++) {
+    for (i = cities.length -1; i >= 0; i--) {
+      let city = cities[i];
+
       const btnEl = document.createElement('button');
-      btnEl.innerHTML = cities[i];
-      $(btnEl).attr('class', 'list-group-item list-group-item-action');
+      btnEl.textContent = city;
+      $(btnEl).attr('id', 'city-list');
+      $(btnEl).attr('class', 'list-group-item list-group-item-action text-capitalize');
+      $(btnEl).attr('data-city', city);
       $('#search-history').append(btnEl);
+
+      // make button clickable
+      $(btnEl).on('click', function() {
+        let getCity = $(this).attr('data-city');
+        getWeather(getCity);
+        window.location.reload();
+      });
     }
-  } 
+  }
 };
 
 // load last viewed city before page refresh
@@ -36,35 +48,6 @@ function lastViewed() {
   let city = cities.slice(-1).pop();
   $('#search-city').val(city);
 }
-
-// onclick event listener for search button
-$('#search-btn').on('click', function(event) {
-  event.preventDefault();
-  let searchCity = cityInputEl.value.trim();
-
-  // clear input field
-  $('#search-city').empty();
-
-  // if input field left blank
-  if (searchCity === "") {
-    return;
-  } else {
-    getWeather();
-  }
-
-  // check for existing city
-  if (cities === null) {
-    cities = [];
-  }
-
-  cities.push(searchCity);
-
-  // save to local storage
-  localStorage.setItem('cities', JSON.stringify(cities));
-
-  // refresh page to load city search history
-  window.location.reload();
-});
 
 // display weather info for searched city
 function getWeather() {
@@ -98,7 +81,7 @@ function getWeather() {
 
       // display current weather information of city
       $('#current-city').text(city);
-      $('#current-city').append(' (' + currentDay + ') <img src="http://openweathermap.org/img/wn/' + weather.current.weather[0].icon + '.png" alt="' + weather.current.weather[0].description + '"/>');
+      $('#current-city').append(' (' + currentDay + ') <img src="./assets/images/icons/' + weather.current.weather[0].icon + '.png" alt="' + weather.current.weather[0].description + '"/>');
       $('#current-temp').text('Temp: ' + Math.round(weather.current.temp) + '° F');
       $('#current-wind').text('Wind: ' + Math.round(weather.current.wind_speed) + ' MPH');
       $('#current-humidity').text('Humidity: ' + weather.current.humidity + '%');
@@ -133,7 +116,7 @@ function getWeather() {
 
         // set card
         const forecastCard = document.createElement('div');
-        $(forecastCard).attr('class', 'forecast');
+        $(forecastCard).attr('class', 'forecast rounded');
         $(forecastCol).append(forecastCard);
         const forecastCardBody = document.createElement('div');
         $(forecastCardBody).attr('class', 'card-body');
@@ -146,7 +129,7 @@ function getWeather() {
         $(forecastCardBody).append(forecastCardH5);
 
         // set forecast icon
-        $(forecastCardBody).append('<img src="http://openweathermap.org/img/wn/' + forecastIcon + 
+        $(forecastCardBody).append('<img src="./assets/images/icons/' + forecastIcon + 
         '.png" alt="' + forecastDesc + '"/>');
 
         // set forecast temp
@@ -167,6 +150,33 @@ function getWeather() {
     })
   })
 };
+
+// onclick event listener for search button
+$('#search-btn').on('click', function(event) {
+  let searchCity = cityInputEl.value.trim();
+
+  // clear input field
+  //$('#search-city').empty();
+
+  // do nothing if input field left blank, otherwise get weather
+  if (searchCity === "") {
+    return;
+  } else {
+    getWeather(searchCity);
+    searchCity.value = '';
+  }
+
+  // check for city in array
+  if (cities === null) {
+    cities = [];
+  }
+
+  // add city into array
+  cities.push(searchCity);
+
+  // save to local storage
+  localStorage.setItem('cities', JSON.stringify(cities));
+});
 
 // clear history on click
 $('#clear-btn').on('click', function() {
