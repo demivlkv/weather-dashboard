@@ -36,6 +36,12 @@ h5 {
     font-weight: bold;
 }
 
+.compass img {
+    display: block;
+    margin: 0px auto;
+    height: 275px;
+}
+
 .hide {
     display: none;
 }

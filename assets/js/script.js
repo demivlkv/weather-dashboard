@@ -3,20 +3,19 @@ let cityInputEl = document.getElementById('search-city');
 // access weather api
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
 
-// check localstorage for last viewed city, then load it
-if (localStorage.getItem('cities') !== null) {
-  // clear input field
-  cityInputEl.value = '';
-
-  lastViewed();
-  getWeather();
-};
-
+// populate sidebar with previously searched cities
 loadCities();
 
+// load previously searched location for returning user
+if (localStorage.getItem('cities') !== null) {
+  // clear input field
+  $('#search-city').empty();
+
+  lastViewed();
+};
+
 // load sidebar with previous searches
-function loadCities() {
-  // search localstorage
+function loadCities(searchCity) {
   cities = JSON.parse(localStorage.getItem('cities')) || [];
 
   // create list item for each city input in reverse order
@@ -30,27 +29,75 @@ function loadCities() {
       $(btnEl).attr('class', 'list-group-item list-group-item-action text-capitalize');
       $(btnEl).attr('data-city', city);
       $('#search-history').append(btnEl);
-
-      // make button clickable
-      $(btnEl).on('click', function(event) {
-        let getCity = $(this).attr('data-city');
-        getWeather(getCity);
-        window.location.reload();
-      });
     }
   }
 };
 
-// load last viewed city before page refresh
+// get weather for last viewed city upon page reload
 function lastViewed() {
   let cities = JSON.parse(localStorage.getItem('cities'));
   let city = cities.slice(-1).pop();
   $('#search-city').val(city);
+  getWeather();
 
   // display hidden items
   $('.current-weather').removeClass('hide');
   $('.forecast-h3').removeClass('hide');
+  $('.compass').addClass('hide');
 }
+
+// onclick event listener for search button
+$('#search-btn').on('click', function(event) {
+  let searchCity = cityInputEl.value.trim();
+
+  // do nothing if input field left blank, otherwise get weather
+  if (searchCity) {
+    getWeather(searchCity);
+    $('#search-city').val('');
+  } else {
+    alert('Please enter a valid city name.');
+    return;
+  }
+
+  let cities;
+
+  // check for city in previous searches
+  if (localStorage.getItem('cities') === null) {
+    cities = [];
+  } else {
+    cities = JSON.parse(localStorage.getItem('cities'));
+  }
+
+  // add city into array
+  if (cities.includes(searchCity) === false) {
+    cities.push(searchCity);
+  }
+
+  saveCity();
+
+  // display hidden items
+  $('.current-weather').removeClass('hide');
+  $('.forecast-h3').removeClass('hide');
+  $('.compass').addClass('hide');
+});
+
+// save to local storage
+function saveCity() {
+  localStorage.setItem('cities', JSON.stringify(cities));
+};
+
+// make button clickable
+$(document).on('click', '#city-list', function(event) {
+  let getCity = $(this).attr('data-city');
+  getWeather(getCity);
+  window.location.reload();
+});
+
+// clear history on click
+$('#clear-btn').on('click', function(event) {
+  localStorage.clear(cities);
+  window.location.reload();
+});
 
 // display weather info for searched city
 function getWeather() {
@@ -155,41 +202,4 @@ function getWeather() {
       }
     })
   })
-};
-
-// onclick event listener for search button
-$('#search-btn').on('click', function(event) {
-  let searchCity = cityInputEl.value.trim();
-
-  // do nothing if input field left blank, otherwise get weather
-  if (searchCity) {
-    getWeather(searchCity);
-    cityInputEl.value = '';
-  } else {
-    return;
-  }
-
-  // check for city in array
-  if (cities === null) {
-    cities = [];
-  }
-
-  // add city into array
-  cities.push(searchCity);
-  saveCity();
-
-  // display hidden items
-  $('.current-weather').removeClass('hide');
-  $('.forecast-h3').removeClass('hide');
-});
-
-// clear history on click
-$('#clear-btn').on('click', function(event) {
-  localStorage.clear(cities);
-  window.location.reload();
-});
-
-// save to local storage
-function saveCity() {
-  localStorage.setItem('cities', JSON.stringify(cities));
 };
