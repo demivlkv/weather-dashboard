@@ -12,40 +12,6 @@ if (localStorage.getItem('cities') !== null) {
   lastViewed();
 };
 
-// load sidebar with previous searches
-function loadCities(searchCity) {
-  cities = JSON.parse(localStorage.getItem('cities'));
-
-  $('#search-history').html('');
-
-  // create list item for each city input in reverse order
-  if (cities) {
-    for (i = cities.length - 1; i >= 0; i--) {
-      let city = cities[i];
-
-      const btnEl = document.createElement('button');
-      btnEl.textContent = city;
-      $(btnEl).attr('id', 'city-list');
-      $(btnEl).attr('class', 'list-group-item list-group-item-action text-capitalize');
-      $(btnEl).attr('data-city', city);
-      $('#search-history').append(btnEl);
-    }
-    // limit search history array
-    if (cities.length > 8) {
-      cities.shift();
-      }
-  }
-};
-
-// get weather for last viewed city upon page reload
-function lastViewed() {
-  let cities = JSON.parse(localStorage.getItem('cities'));
-  let city = cities.slice(-1).pop();
-  $('#search-city').val('');
-  getWeather(city);
-  display();
-};
-
 // onclick event listener for search button
 $('#search-btn').on('click', function(event) {
   let searchCity = cityInputEl.value.trim();
@@ -73,43 +39,6 @@ $('#search-btn').on('click', function(event) {
 
   saveCity();
   display();
-});
-
-// save to local storage
-function saveCity() {
-  localStorage.setItem('cities', JSON.stringify(cities));
-};
-
-// make search history buttons clickable
-$('#search-history').on('click', 'button#city-list', function(event) {
-  let getCity = $(this).attr('data-city');
-  // clears input
-  $('#search-city').val('');
-
-  getWeather(getCity);
-  organizeArr(getCity);
-});
-
-// re-orders list after clicking city from search history
-function organizeArr(city) {
-  var cityList = JSON.parse(localStorage.getItem('cities'));
-  cities = [];
-
-  for (i = 0; i < cityList.length; i++) {
-    if (cityList[i].toLowerCase() !== city.toLowerCase()) {
-      cities.push(cityList[i]);
-    }
-  }
-
-  cities.push(city);
-  localStorage.setItem('cities', JSON.stringify(cities));
-  loadCities();
-};
-
-// clear history on click
-$('#clear-btn').on('click', function(event) {
-  localStorage.clear(cities);
-  window.location.reload();
 });
 
 // display weather info for searched city
@@ -169,8 +98,6 @@ function getWeather(getCity) {
         $('.bg-uvi').addClass('badge-good');
       }
 
-      saveCity();
-
       // clears input
       $('#display-forecast').html('');
 
@@ -224,6 +151,77 @@ function getWeather(getCity) {
       }
     })
   })
+};
+
+// save to local storage
+function saveCity() {
+  localStorage.setItem('cities', JSON.stringify(cities));
+};
+
+// load sidebar with previous searches
+function loadCities(searchCity) {
+  cities = JSON.parse(localStorage.getItem('cities'));
+
+  $('#search-history').html('');
+
+  // create list item for each city input in reverse order
+  if (cities) {
+    for (i = cities.length - 1; i >= 0; i--) {
+      let city = cities[i];
+
+      const btnEl = document.createElement('button');
+      btnEl.textContent = city;
+      $(btnEl).attr('id', 'city-list');
+      $(btnEl).attr('class', 'list-group-item list-group-item-action text-capitalize');
+      $(btnEl).attr('data-city', city);
+      $('#search-history').append(btnEl);
+    }
+    // limit search history array
+    if (cities.length > 8) {
+      cities.shift();
+      }
+  }
+};
+
+// make search history buttons clickable
+$('#search-history').on('click', 'button#city-list', function(event) {
+  let getCity = $(this).attr('data-city');
+  // clears input
+  $('#search-city').val('');
+
+  getWeather(getCity);
+  organizeArr(getCity);
+});
+
+// clear history on click
+$('#clear-btn').on('click', function(event) {
+  localStorage.clear(cities);
+  window.location.reload();
+});
+
+// re-orders list after clicking city from search history
+function organizeArr(city) {
+  var cityList = JSON.parse(localStorage.getItem('cities'));
+  cities = [];
+
+  for (i = 0; i < cityList.length; i++) {
+    if (cityList[i].toLowerCase() !== city.toLowerCase()) {
+      cities.push(cityList[i]);
+    }
+  }
+
+  cities.push(city);
+  localStorage.setItem('cities', JSON.stringify(cities));
+  loadCities();
+};
+
+// get weather for last viewed city upon page reload
+function lastViewed() {
+  let cities = JSON.parse(localStorage.getItem('cities'));
+  let city = cities.slice(-1).pop();
+  $('#search-city').val('');
+  getWeather(city);
+  display();
 };
 
 // display & hide items on page
