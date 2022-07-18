@@ -1,3 +1,4 @@
+let cities;
 let cityInputEl = document.getElementById('search-city');
 
 // access weather api
@@ -8,19 +9,18 @@ loadCities();
 
 // load previously searched location for returning user
 if (localStorage.getItem('cities') !== null) {
-  // clear input field
-  $('#search-city').empty();
-
   lastViewed();
 };
 
 // load sidebar with previous searches
 function loadCities(searchCity) {
-  cities = JSON.parse(localStorage.getItem('cities')) || [];
+  cities = JSON.parse(localStorage.getItem('cities'));
+
+  $('#search-history').html('');
 
   // create list item for each city input in reverse order
   if (cities) {
-    for (i = cities.length -1; i >= 0; i--) {
+    for (i = cities.length - 1; i >= 0; i--) {
       let city = cities[i];
 
       const btnEl = document.createElement('button');
@@ -30,6 +30,10 @@ function loadCities(searchCity) {
       $(btnEl).attr('data-city', city);
       $('#search-history').append(btnEl);
     }
+    // limit search history array
+    if (cities.length > 8) {
+      cities.shift();
+      }
   }
 };
 
@@ -37,20 +41,16 @@ function loadCities(searchCity) {
 function lastViewed() {
   let cities = JSON.parse(localStorage.getItem('cities'));
   let city = cities.slice(-1).pop();
-  $('#search-city').val(city);
-  getWeather();
-
-  // display hidden items
-  $('.current-weather').removeClass('hide');
-  $('.forecast-h3').removeClass('hide');
-  $('.compass').addClass('hide');
+  $('#search-city').val('');
+  getWeather(city);
+  display();
 }
 
 // onclick event listener for search button
 $('#search-btn').on('click', function(event) {
   let searchCity = cityInputEl.value.trim();
 
-  // do nothing if input field left blank, otherwise get weather
+  // get weather unless input left blank
   if (searchCity) {
     getWeather(searchCity);
     $('#search-city').val('');
@@ -58,8 +58,6 @@ $('#search-btn').on('click', function(event) {
     alert('Please enter a valid city name.');
     return;
   }
-
-  let cities;
 
   // check for city in previous searches
   if (localStorage.getItem('cities') === null) {
@@ -74,11 +72,7 @@ $('#search-btn').on('click', function(event) {
   }
 
   saveCity();
-
-  // display hidden items
-  $('.current-weather').removeClass('hide');
-  $('.forecast-h3').removeClass('hide');
-  $('.compass').addClass('hide');
+  display();
 });
 
 // save to local storage
@@ -86,12 +80,29 @@ function saveCity() {
   localStorage.setItem('cities', JSON.stringify(cities));
 };
 
-// make button clickable
-$(document).on('click', '#city-list', function(event) {
+// make search history buttons clickable
+$('#search-history').on('click', 'button#city-list', function(event) {
   let getCity = $(this).attr('data-city');
+  $('#search-city').val('');
   getWeather(getCity);
-  window.location.reload();
+  organizeArr(getCity);
 });
+
+// re-orders list after clicking city from search history
+function organizeArr(city) {
+  var cityList = JSON.parse(localStorage.getItem('cities'));
+  cities = [];
+
+  for (i = 0; i < cityList.length; i++) {
+    if (cityList[i].toLowerCase() !== city.toLowerCase()) {
+      cities.push(cityList[i]);
+    }
+  }
+
+  cities.push(city);
+  localStorage.setItem('cities', JSON.stringify(cities));
+  loadCities();
+};
 
 // clear history on click
 $('#clear-btn').on('click', function(event) {
@@ -100,8 +111,8 @@ $('#clear-btn').on('click', function(event) {
 });
 
 // display weather info for searched city
-function getWeather() {
-  let searchCity = cityInputEl.value.trim();
+function getWeather(getCity) {
+  let searchCity = getCity || cityInputEl.value.trim();
 
   // find latitude & longitude values from city name
   let xyApi = 'http://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
@@ -126,6 +137,11 @@ function getWeather() {
     })
     .then(function(weather) {
       console.log(weather);
+      $('#current-icon').html('');
+      $('#current-city').html('');
+      $('#current-wind').html('');
+      $('#current-humidity').html('');
+      $('#uv-index').html('');
 
       // get current date of searched city according to timezone
       let currentDay = moment(weather.current.dt * 1000 + (weather.timezone_offset * 1000)).format('dddd, l');
@@ -151,6 +167,8 @@ function getWeather() {
       }
 
       saveCity();
+
+      $('#display-forecast').html('');
 
       // create 5 cards to display forecast
       for (let i = 1; i < 6; i++) {    
@@ -202,4 +220,12 @@ function getWeather() {
       }
     })
   })
+};
+
+// display & hide items
+function display() {
+  $('.btn').removeClass('hide');
+  $('.current-weather').removeClass('hide');
+  $('.forecast-h3').removeClass('hide');
+  $('.compass').addClass('hide');
 };
