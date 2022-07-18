@@ -44,7 +44,7 @@ function lastViewed() {
   $('#search-city').val('');
   getWeather(city);
   display();
-}
+};
 
 // onclick event listener for search button
 $('#search-btn').on('click', function(event) {
@@ -83,7 +83,9 @@ function saveCity() {
 // make search history buttons clickable
 $('#search-history').on('click', 'button#city-list', function(event) {
   let getCity = $(this).attr('data-city');
+  // clears input
   $('#search-city').val('');
+
   getWeather(getCity);
   organizeArr(getCity);
 });
@@ -122,21 +124,22 @@ function getWeather(getCity) {
       return response.json();
     })
     .then(function(data) {
-      console.log(data);
+      // console.log(data);
       const lat = data[0].lat;
       const lon = data[0].lon;
       const city = data[0].name;
       const country = data[0].country;
 
-  // search weather for specified city with found lat & lon
-  let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly&units=imperial&appid=' + apiKey;
+    // search weather for specified city with found lat & lon
+    let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly&units=imperial&appid=' + apiKey;
 
     fetch(weatherApi)
     .then(function(response) {
       return response.json();
     })
     .then(function(weather) {
-      console.log(weather);
+      // console.log(weather);
+      // clears input
       $('#current-icon').html('');
       $('#current-city').html('');
       $('#current-wind').html('');
@@ -168,6 +171,7 @@ function getWeather(getCity) {
 
       saveCity();
 
+      // clears input
       $('#display-forecast').html('');
 
       // create 5 cards to display forecast
@@ -222,7 +226,7 @@ function getWeather(getCity) {
   })
 };
 
-// display & hide items
+// display & hide items on page
 function display() {
   $('.btn').removeClass('hide');
   $('.current-weather').removeClass('hide');

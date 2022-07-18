@@ -11,6 +11,8 @@ The objective for this project is to create a weather dashboard by utilizing Ser
 - Weather icons by [Bas Milius](https://github.com/basmilius/weather-icons)
 
 ## Project Screenshot
+![This is a demo of the weather dashboard.](/../main/assets/images/demo.gif)
+
 ![This is a screenshot of the weather dashboard.](/../main/assets/images/screenshot.png)
 
 ## Project Link
