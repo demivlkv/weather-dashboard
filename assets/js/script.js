@@ -1,7 +1,5 @@
 let cities;
-let cityInputEl = document.getElementById('search-city');
-
-// access weather api
+const cityInputEl = document.getElementById('search-city');
 const apiKey = 'e3de8be511a273af8a582c5c16284223';
 
 // populate sidebar with previously searched cities
@@ -41,15 +39,14 @@ $('#search-btn').on('click', function(event) {
   display();
 });
 
-// display weather info for searched city
+// display weather info for entered city
 function getWeather(getCity) {
   let searchCity = getCity || cityInputEl.value.trim();
 
   // find latitude & longitude values from city name
   let xyApi = 'http://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
   
-    fetch(xyApi)
-    .then(function(response) {
+    fetch(xyApi).then(function(response) {
       return response.json();
     })
     .then(function(data) {
@@ -59,11 +56,10 @@ function getWeather(getCity) {
       const city = data[0].name;
       const country = data[0].country;
 
-    // search weather for specified city with found lat & lon
+    // search weather for specified city with lat & lon
     let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly&units=imperial&appid=' + apiKey;
 
-    fetch(weatherApi)
-    .then(function(response) {
+    fetch(weatherApi).then(function(response) {
       return response.json();
     })
     .then(function(weather) {
@@ -176,10 +172,6 @@ function loadCities(searchCity) {
       $(btnEl).attr('data-city', city);
       $('#search-history').append(btnEl);
     }
-    // limit search history array
-    if (cities.length > 8) {
-      cities.shift();
-      }
   }
 };
 
