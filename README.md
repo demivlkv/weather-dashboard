@@ -3,8 +3,7 @@ The objective for this project is to create a weather dashboard by utilizing Ser
 
 ## Built With:
 - HTML
-- CSS
-- [Bootstrap](https://getbootstrap.com/)
+- CSS / [Bootstrap](https://getbootstrap.com/)
 - JavaScript / [jQuery](https://jquery.com/)
 - [Moment.js](https://momentjs.com/)
 - [OpenWeather One Call API](https://openweathermap.org/)
