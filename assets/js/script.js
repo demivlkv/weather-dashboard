@@ -44,7 +44,7 @@ function getWeather(getCity) {
   let searchCity = getCity || cityInputEl.value.trim();
 
   // find latitude & longitude values from city name
-  let xyApi = 'http://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
+  let xyApi = 'https://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
   
     fetch(xyApi).then(function(response) {
       return response.json();
