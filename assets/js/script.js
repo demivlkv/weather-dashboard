@@ -81,7 +81,7 @@ function displayWeather(data, getCity) {
     })
     .then(function(weather) {
       // console.log(weather);
-      // clears input
+      // clears current weather dynamic html
       $('#current-icon').html('');
       $('#current-city').html('');
       $('#current-wind').html('');
@@ -111,18 +111,11 @@ function displayWeather(data, getCity) {
         $('.bg-uvi').addClass('badge-good');
       }
 
-      // clears input
+      // clears forecast dynamic html
       $('#display-forecast').html('');
 
       // create 5 cards to display forecast
-      for (let i = 1; i < 6; i++) {    
-        let forecastDate = moment((weather.daily[i].dt) * 1000).format('ddd M/D');
-        let forecastIcon = weather.daily[i].weather[0].icon;
-        let forecastDesc = weather.daily[i].weather[0].description;
-        let forecastTemp = Math.round(weather.daily[i].temp.day);
-        let forecastWind = Math.round(weather.daily[i].wind_speed);
-        let forecastHumidity = weather.daily[i].humidity;
-
+      for (let i = 1; i < 6; i++) {
         // set div col
         const forecastCol = document.createElement('div');
         $(forecastCol).attr('class', 'col-sm');
@@ -139,27 +132,27 @@ function displayWeather(data, getCity) {
         // set forecast dates
         const forecastCardH5 = document.createElement('h5');
         $(forecastCardH5).attr('class', 'card-title');
-        $(forecastCardH5).text(forecastDate);
+        $(forecastCardH5).text(moment((weather.daily[i].dt) * 1000).format('ddd M/D'));
         $(forecastCardBody).append(forecastCardH5);
 
         // set forecast icon
-        $(forecastCardBody).append('<img src="./assets/images/icons/' + forecastIcon + 
-        '.svg" alt="' + forecastDesc + '"/>');
+        $(forecastCardBody).append('<img src="./assets/images/icons/' + weather.daily[i].weather[0].icon + 
+        '.svg" alt="' + weather.daily[i].weather[0].description + '"/>');
 
         // set forecast temp
         const forecastCardTemp = document.createElement('p');
         $(forecastCardTemp).attr('class', 'forecast-temp');
-        $(forecastCardTemp).append(forecastTemp + '° F');
+        $(forecastCardTemp).append(Math.round(weather.daily[i].temp.day) + '° F');
         $(forecastCardBody).append(forecastCardTemp);
 
         // set forecast wind
         const forecastCardWind = document.createElement('p');
-        $(forecastCardWind).html('<strong>Wind:</strong> ' + forecastWind + ' MPH');
+        $(forecastCardWind).html('<strong>Wind:</strong> ' + Math.round(weather.daily[i].wind_speed) + ' MPH');
         $(forecastCardBody).append(forecastCardWind);
 
         // set forecast humidity
         const forecastCardHumidity = document.createElement('p');
-        $(forecastCardHumidity).html('<strong>Humidity:</strong> ' + forecastHumidity + '%');
+        $(forecastCardHumidity).html('<strong>Humidity:</strong> ' + weather.daily[i].humidity + '%');
         $(forecastCardBody).append(forecastCardHumidity);
       }
     })
