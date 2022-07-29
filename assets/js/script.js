@@ -46,10 +46,26 @@ function getWeather(getCity) {
   // find latitude & longitude values from city name
   let xyApi = 'https://api.openweathermap.org/geo/1.0/direct?q=' + searchCity + '&appid=' + apiKey;
   
-    fetch(xyApi).then(function(response) {
-      return response.json();
+  fetch(xyApi)
+  .then(function(response) {
+    if (response.ok) {
+      response.json().then(function(data) {
+        displayWeather(data, getCity);
+        });
+      } else {
+        alert('Please enter a valid city.');
+        return;
+      }
     })
-    .then(function(data) {
+    .catch(function(error) {
+      if (response.status != 200) {
+        alert('Unable to connect to server.');
+        $('#search-city').val('');
+      }
+    });
+};
+
+function displayWeather(data, getCity) {
       // console.log(data);
       const lat = data[0].lat;
       const lon = data[0].lon;
@@ -59,7 +75,8 @@ function getWeather(getCity) {
     // search weather for specified city with lat & lon
     let weatherApi = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly&units=imperial&appid=' + apiKey;
 
-    fetch(weatherApi).then(function(response) {
+    fetch(weatherApi)
+    .then(function(response) {
       return response.json();
     })
     .then(function(weather) {
@@ -146,7 +163,6 @@ function getWeather(getCity) {
         $(forecastCardBody).append(forecastCardHumidity);
       }
     })
-  })
 };
 
 // save to local storage
@@ -157,6 +173,8 @@ function saveCity() {
 // load sidebar with previous searches
 function loadCities(searchCity) {
   cities = JSON.parse(localStorage.getItem('cities'));
+  // limit cities shown in search history
+  // cities = cities.splice(-5);
 
   $('#search-history').html('');
 
