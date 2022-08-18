@@ -1,4 +1,4 @@
-# Project 6: Server-Side APIs Challenge - Weather Dashboard
+# Weather Dashboard
 The objective for this project is to create a weather dashboard by utilizing Server-Side APIs - specifically with [OpenWeather One Call API](https://openweathermap.org/). Users will be able to search for cities, and will be presented with the city's current weather & its five-day forecast. This application will also save the user's  searched cities to local storage, which then will dynamically create a clickable list so that the user can easily access the weather conditions of their previously viewed cities.
 
 ## Built With:
