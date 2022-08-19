@@ -167,7 +167,7 @@ function saveCity() {
 function loadCities(searchCity) {
   cities = JSON.parse(localStorage.getItem('cities'));
   // limit cities shown in search history
-  cities = cities.slice(-5, cities.length);
+  // cities = cities.slice(-5, cities.length);
 
   $('#search-history').html('');
 
