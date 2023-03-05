@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ImSpinner8 } from 'react-icons/im';
 import { CgSearch } from 'react-icons/cg';
 
@@ -48,13 +48,9 @@ const App = () => {
     getWeather([latitude, longitude]);
   }
 
-  useEffect(() => {
-
-  })
-
   return (
-    <div className="w-full h-screen flex justify-center align-center my-8">
-      <div className="max-w-xl w-full h-full mx-8 p-8 border border-slate-200 rounded-xl shadow-lg">
+    <div className="w-full h-full flex justify-center align-center my-8">
+      <div className="max-w-5xl w-full h-auto mx-8 p-8 flex flex-col justify-center align-center border border-slate-200 rounded-xl shadow-lg">
         <h1>Weather App</h1>
 
         {/* CITY INPUT */}
@@ -75,7 +71,9 @@ const App = () => {
         </form>
 
         {/* DISPLAY CURRENT WEATHER */}
-        <h2>Right now in <span className="city-text">{city}</span>, it's {description}.</h2>
+        <div className="flex justify-center items-center">
+          <h2 className="text-2xl">Right now in <span className="city-text">{city}</span>, it's {description}.</h2>
+        </div>
         {weatherData.length === 0 ? (
           <div>
             <ImSpinner8 className="text-5xl animate-spin" />
@@ -84,7 +82,7 @@ const App = () => {
           <>
             <CurrentWeather icon={weatherIcon} data={weatherData} />
             
-            <ul className="grid grid-cols-3 gap-4">
+            <ul className="w-full flex flex-row flex-wrap justify-center items-center">
               {weatherData.list.map((days, i) => {
                 if (i > 0) {
                   return (<Forecast key={i} day={days} />)

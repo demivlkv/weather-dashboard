@@ -10,10 +10,10 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 font-primary font-light text-base text-gray-600 leading-loose;
+    @apply bg-gray-50 font-primary font-light text-base text-gray-500 leading-loose;
   }
 }
 
 .city-text {
-  @apply px-2 font-semibold border-b-2 border-gray-300;
+  @apply py-1 px-3 font-semibold border-b-2 border-gray-300;
 }
