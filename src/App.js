@@ -12,7 +12,7 @@ const App = () => {
   const [weatherData, setWeatherData] = useState([]);
   const [city, setCity] = useState('Tokyo');
   const [description, setDescription] = useState('sunny');
-  const [weatherIcon, setWeatherIcon] = useState(`${process.env.REACT_APP_ICON_URL}`);
+  const [weatherIcon, setWeatherIcon] = useState(`${process.env.REACT_APP_ICON_URL}.svg`);
 
   // if (noData) {
   //   return (
