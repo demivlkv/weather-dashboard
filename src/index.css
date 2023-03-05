@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@100;200;300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,6 +10,10 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-base text-gray-600 font-normal leading-loose;
+    @apply bg-gray-50 font-primary font-light text-base text-gray-600 leading-loose;
   }
+}
+
+.city-text {
+  @apply px-2 font-semibold border-b-2 border-gray-300;
 }
