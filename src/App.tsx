@@ -8,7 +8,9 @@ const App = (): JSX.Element => {
   const { search, options, weather, forecast, handleChange, onOptionSelect, handleSubmit } = useForecast();
 
   return (
-    <main className="w-full h-full md:h-screen flex flex-col justify-center items-center bg-gradient-to-br from-teal-200 via-cyan-200 to-gray-200">
+    <main
+      className={`w-full ${weather && forecast ? `h-auto md:h-screen` : `h-screen`} flex flex-col justify-center items-center bg-gradient-to-br from-teal-200 via-cyan-200 to-gray-200`}
+    >
       <Search
         search={search}
         options={options}
