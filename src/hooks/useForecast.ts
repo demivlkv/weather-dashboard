@@ -31,7 +31,7 @@ const useForecast = () => {
           ...data.city,
           list: data.list.slice(0, 4)
         }
-        console.log(data);
+        // console.log(data);
         setWeather(weatherData);
       })
       .catch((e) => console.log(e))
@@ -45,7 +45,7 @@ const useForecast = () => {
           ...data.city,
           daily: data.daily.slice(1, 6)
         }
-        console.log(data);
+        // console.log(data);
         setForecast(forecastData);
       })
       .catch((e) => console.log(e))
