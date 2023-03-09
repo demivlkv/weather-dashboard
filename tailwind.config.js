@@ -1,12 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./src/**/*.{html,js,ts,tsx}'],
   theme: {
-    fontFamily: {
-      primary: 'Urbanist'
-    },
     extend: {},
   },
   plugins: [],
