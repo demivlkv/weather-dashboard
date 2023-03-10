@@ -17,7 +17,7 @@ const CurrentWeather = ({ data }: Props): JSX.Element => {
 
   return (
     <>
-      <h1 className="text-lg md:text-2xl">Right now in <span className="py-2 px-3 text-gray-700 font-bold border-b-4 border-slate-300">{data.name}, {data.country}</span>, it's {today.weather[0].description}.</h1>
+      <h1 className="text-center text-lg md:text-2xl">Right now in <span className="py-0 md:py-2 px-3 text-gray-700 font-bold border-b-2 md:border-b-4 border-slate-300">{data.name}, {data.country}</span>, it's {today.weather[0].description}.</h1>
       <section className="my-8 md:my-4 flex flex-wrap justify-center items-center">
         <img src={`./icons/${today.weather[0].icon}.svg`} alt={today.weather[0].description} className="w-1/2 md:w-1/3" />
         <div className="mb-8 md:mb-0 mx-12 flex flex-col justify-center items-center">
