@@ -9,13 +9,13 @@ const useForecast = () => {
   const [forecast, setForecast] = useState<forecastType | null>(null);
 
   const getSearchOptions = (value: string) => {
-    fetch(`${process.env.REACT_APP_GEO_URL}q=${value.trim()}&limit=5&appid=${process.env.REACT_APP_API_KEY}`)
+    fetch(`${process.env.REACT_APP_GEO_URL}q=${value}&limit=5&appid=${process.env.REACT_APP_API_KEY}`)
       .then((res) => res.json())
       .then((data) => setOptions(data))
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+    const value = e.target.value;
     setSearch(value);
 
     if (value === '') return;
